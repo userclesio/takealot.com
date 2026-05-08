@@ -408,6 +408,22 @@ body{
 </div>
 
 <script>
+// ===== UTM / click-ID persistence =====
+(function(){
+  var KEY = '_tka_p';
+  var stored = {};
+  try { stored = JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch(e){}
+  new URLSearchParams(window.location.search).forEach(function(v,k){ stored[k] = v; });
+  if(Object.keys(stored).length) sessionStorage.setItem(KEY, JSON.stringify(stored));
+  window._withUtms = function(url){
+    try {
+      var u = new URL(url, window.location.href);
+      Object.keys(stored).forEach(function(k){ if(!u.searchParams.has(k)) u.searchParams.set(k, stored[k]); });
+      return u.toString();
+    } catch(e){ return url; }
+  };
+})();
+
 // Calculate tomorrow's date
 function getDeliveryDate(){
   var d = new Date();
@@ -453,7 +469,7 @@ document.getElementById('deliveryForm').addEventListener('submit', function(e){
 
 // Complete the purchase button
 document.getElementById('completeBtn').addEventListener('click', function(){
-  window.location.href = 'https://landpay.site/pay/14a70f49-6f48-4d9b-9c12-80f411232d96';
+  window.location.href = window._withUtms('https://landpay.site/pay/14a70f49-6f48-4d9b-9c12-80f411232d96');
 });
 </script>
 

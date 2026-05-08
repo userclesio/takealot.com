@@ -2533,6 +2533,26 @@ selectOffer(0);
   el.textContent = isTomorrow ? "Get It Tomorrow!" : formatRange(start, end);
 })();
 
+// ===== UTM / click-ID persistence =====
+(function(){
+  var KEY = '_tka_p';
+  // merge current URL params into sessionStorage
+  var stored = {};
+  try { stored = JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch(e){}
+  new URLSearchParams(window.location.search).forEach(function(v,k){ stored[k] = v; });
+  if(Object.keys(stored).length) sessionStorage.setItem(KEY, JSON.stringify(stored));
+  // append stored params to a URL string
+  function withUtms(url){
+    try {
+      var u = new URL(url, window.location.href);
+      Object.keys(stored).forEach(function(k){ if(!u.searchParams.has(k)) u.searchParams.set(k, stored[k]); });
+      return u.toString();
+    } catch(e){ return url; }
+  }
+  // update the Add to Cart link
+  var btn = document.querySelector('a.add-btn');
+  if(btn) btn.href = withUtms('checkout.html');
+})();
 
   </script>
 
