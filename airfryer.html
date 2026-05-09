@@ -927,7 +927,7 @@
         try { var u = new URL(url, window.location.href); Object.keys(stored).forEach(function(k){ if(!u.searchParams.has(k)) u.searchParams.set(k, stored[k]); }); return u.toString(); } catch(e){ return url; }
       }
       var btn = document.getElementById('addToCartBtn');
-      if(btn) btn.href = withUtms('checkout.html');
+      if(btn) btn.href = withUtms('checkout-airfryer.html');
     })();
   </script>
 
